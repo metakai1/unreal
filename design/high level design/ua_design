@@ -1,0 +1,68 @@
+i want build a system for this:
+1 convert this data into records that can be inserted into a database with embeddings
+2 build a system prompt that can be used in an api, which then converts user queries into a search record that is combatible with the records from step 1
+
+
+I'll help you build this system. Let's break it down into steps:
+
+First, let's define the record structure that will include embeddings:
+
+class LandRecord:
+    id: str  # Unique identifier (Name field)
+    rank: int
+    neighborhood: str
+    zoning_type: str
+    plot_size: str
+    building_size: str
+    ocean_proximity: str
+    bay_proximity: str
+    floor_range: tuple[int, int]
+    plot_area: float
+    building_height_range: tuple[float, float]
+    distances: tuple[float, float]  # (ocean, bay)
+    embedding: list[float]  # Vector embedding of combined features
+
+For embeddings, we should consider:
+Text fields should be embedded using a text embedding model (like OpenAI's text-embedding-ada-002)
+Numerical fields should be normalized
+Categorical fields should be one-hot encoded
+Distance metrics should be scaled
+For the system prompt to handle queries, here's a proposed structure:
+
+-----------------------------
+
+You are a real estate search assistant for a futuristic city. Your role is to convert natural language queries into structured search parameters.
+
+INPUT FORMAT:
+Users will provide natural language queries about properties they're looking for.
+
+OUTPUT FORMAT:
+You must return a JSON object with these fields:
+{
+    "search_params": {
+        "neighborhood": string | null,
+        "zoning_type": string | null,
+        "plot_size_range": [min, max] | null,
+        "building_size_range": [min, max] | null,
+        "ocean_proximity": string | null,
+        "bay_proximity": string | null,
+        "floor_range": [min, max] | null,
+        "plot_area_range": [min, max] | null,
+        "building_height_range": [min, max] | null,
+        "max_distance_ocean": float | null,
+        "max_distance_bay": float | null
+    },
+    "importance_weights": {
+        "location": float,
+        "size": float,
+        "height": float,
+        "proximity": float
+    }
+}
+
+CONSTRAINTS:
+- All fields are optional
+- Weights should sum to 1.0
+- Use null for any unspecified parameters
+
+---------------------------------------------

@@ -1,0 +1,44 @@
+Current:
+"[ID] is a [Size] [Zoning] plot in [Neighborhood]. It is a [Building Type] building with [X] to [Y] floors. The plot area is [Z]m² with building heights from [A]m to [B]m. Located [Distance] from ocean ([C]m) and [Distance] from bay ([D]m)."
+
+Proposed:
+"[ID] is a [Size] [Zoning] plot in [Neighborhood]. It is a [Building Type] building. Located [Distance] from ocean and [Distance] from bay."
+
+With enhanced metadata:
+{
+    "searchText": string,
+    "metadata": {
+        "id": string,
+        "neighborhood": string[],
+        "zoningTypes": string[],
+        "plotSizes": string[],
+        "buildingTypes": string[],
+        "distances": {
+            "ocean": {
+                "meters": number,
+                "category": "Close" | "Medium" | "Far"
+            },
+            "bay": {
+                "meters": number,
+                "category": "Close" | "Medium" | "Far"
+            }
+        },
+        "building": {
+            "floorRange": {
+                "min": number,
+                "max": number
+            },
+            "heightRange": {
+                "min": number,
+                "max": number
+            }
+        },
+        "plot": {
+            "area": number
+        },
+        "rarity": {
+            "rank": number,
+            "category": "Ultra Premium" | "Premium" | "Standard" | "Value" | "Entry Level"
+        }
+    }
+}
