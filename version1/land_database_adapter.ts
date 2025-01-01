@@ -1,5 +1,5 @@
 import { PostgresDatabaseAdapter } from "@ai16z/adapter-postgres";
-import { elizaLogger } from "@ai16z/eliza";
+import { elizaLogger, UUID } from "@ai16z/eliza";
 import {
     LandPlotMemory,
     LandSearchParams,
@@ -14,19 +14,25 @@ export class LandDatabaseAdapter extends PostgresDatabaseAdapter {
         super(connectionConfig);
     }
 
+    async init(): Promise<void> {
+        await super.init();
+        // Add any additional initialization specific to LandDatabaseAdapter if needed
+    }
+
     async createLandMemory(memory: LandPlotMemory): Promise<void> {
-        const landMemory = {
-            ...memory,
-            roomId: LAND_ROOM_ID,
-            agentId: LAND_AGENT_ID
-        };
-        await this.createMemory(landMemory, LAND_TABLE);
+        await this.createMemory(memory, LAND_TABLE);
+    }
+
+    async getLandMemoryById(id: UUID): Promise<LandPlotMemory | undefined> {
+        const memory = await super.getMemoryById(id);
+        if (!memory) return undefined;
+        return memory as LandPlotMemory;
     }
 
     async searchLandByMetadata(params: LandSearchParams): Promise<LandPlotMemory[]> {
         let sql = `
-            SELECT * FROM memories 
-            WHERE type = $1 
+            SELECT * FROM memories
+            WHERE type = $1
             AND content IS NOT NULL
         `;
         const values: any[] = [LAND_TABLE];

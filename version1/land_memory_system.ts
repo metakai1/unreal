@@ -1,6 +1,7 @@
-import { elizaLogger } from "@ai16z/eliza";
+import { elizaLogger, UUID, stringToUuid } from "@ai16z/eliza";
 import { LandDatabaseAdapter } from "./land_database_adapter";
 import { LandPlotMemory, LandSearchParams, DEFAULT_MATCH_COUNT } from "./types";
+import { LAND_ROOM_ID, LAND_AGENT_ID, AGENT_ID } from "./types";
 
 export const LAND_QUERY_SYSTEM_PROMPT = `
 You are a real estate search assistant for a futuristic city. Convert natural language queries into structured search parameters.
@@ -44,12 +45,17 @@ export class LandMemorySystem {
     /**
      * Create a new land memory from CSV data
      */
+
     async createLandMemoryFromCSV(csvRow: any): Promise<void> {
         try {
             const description = this.generatePlotDescription(csvRow);
             const embedding = await this.embedder.embedText(description);
 
             const memory: LandPlotMemory = {
+                id: stringToUuid(`description`),  // TODO FIX THIS
+                userId:  LAND_AGENT_ID,  // Since this is a system-generated memory
+                agentId: LAND_AGENT_ID,
+                roomId: LAND_ROOM_ID,
                 content: {
                     text: description,
                     metadata: {

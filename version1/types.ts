@@ -1,4 +1,4 @@
-import { Memory } from "@ai16z/eliza";
+import { Memory, UUID } from "@ai16z/eliza";
 
 export enum PlotSize {
     Nano = 'Nano',
@@ -64,6 +64,7 @@ export interface LandPlotMetadata {
 }
 
 export interface LandPlotMemory extends Memory {
+    id: UUID;
     content: {
         text: string;
         metadata: LandPlotMetadata;
@@ -104,8 +105,9 @@ export interface LandSearchParams {
 }
 
 // Constants
+export const AGENT_ID: `${string}-${string}-${string}-${string}-${string}` = '1459b245-2171-02f6-b436-c3c2641848e5';
 export const LAND_TABLE = 'land_memories';
-export const LAND_ROOM_ID = 'global_land';
-export const LAND_AGENT_ID = 'land_system';
+export const LAND_ROOM_ID = AGENT_ID;
+export const LAND_AGENT_ID = AGENT_ID;
 export const DEFAULT_MATCH_THRESHOLD = 0.75;
 export const DEFAULT_MATCH_COUNT = 20;
